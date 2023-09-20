@@ -35,6 +35,27 @@ func (r *repository) CreateFolder(username string, folder entity.Folder) error {
 	return nil
 }
 
+// DeleteFolder removes a folder from a user.
+func (r *repository) DeleteFolder(username, folderName string) error {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
+	// Check if the user exists.
+	user, err := r.getUserByName(username)
+	if err != nil {
+		return err
+	}
+
+	for i, f := range user.Folders {
+		if f.Name == folderName {
+			user.Folders = append(user.Folders[:i], user.Folders[i+1:]...)
+			r.users[username] = user // Update the map with the modified user.
+			return nil
+		}
+	}
+
+	return errors.ResourceNotFound(folderName)
+}
 
 func (r *repository) getFolder(username, folderName string) (*entity.Folder, error) {
 	// Check if the user exists.

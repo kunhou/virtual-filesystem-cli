@@ -9,4 +9,5 @@ type IRepository interface {
 	GetUserByName(username string) (*entity.User, error)
 
 	CreateFolder(username string, folder entity.Folder) error
+	DeleteFolder(username, folderName string) error
 }
