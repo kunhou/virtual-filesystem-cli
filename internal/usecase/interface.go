@@ -7,4 +7,6 @@ import (
 type IRepository interface {
 	CreateUser(user *entity.User) error
 	GetUserByName(username string) (*entity.User, error)
+
+	CreateFolder(username string, folder entity.Folder) error
 }
