@@ -57,6 +57,23 @@ func (r *repository) DeleteFolder(username, folderName string) error {
 	return errors.ResourceNotFound(folderName)
 }
 
+func (r *repository) ListFolders(username string, opt entity.ListFolderOption) ([]*entity.Folder, error) {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+
+	user, err := r.getUserByName(username)
+	if err != nil {
+		return nil, err
+	}
+
+	folders := user.Folders
+	sort.Slice(folders, func(i, j int) bool {
+		return sortByAttribute(opt.Sort.Attribute, opt.Sort.Direction)(folders[i], folders[j])
+	})
+
+	return folders, nil
+}
+
 func (r *repository) getFolder(username, folderName string) (*entity.Folder, error) {
 	// Check if the user exists.
 	user, err := r.getUserByName(username)
@@ -70,4 +87,29 @@ func (r *repository) getFolder(username, folderName string) (*entity.Folder, err
 		}
 	}
 	return nil, errors.ResourceNotFound(folderName)
+}
+
+func sortByAttribute(attribute entity.SortAttribute, direction entity.SortDirection) func(fi, fj *entity.Folder) bool {
+	switch {
+	case attribute == entity.SortByCreateTime && direction == entity.Asc:
+		return func(fi, fj *entity.Folder) bool {
+			return fi.CreatedAt.Before(fj.CreatedAt)
+		}
+	case attribute == entity.SortByCreateTime && direction == entity.Desc:
+		return func(fi, fj *entity.Folder) bool {
+			return fi.CreatedAt.After(fj.CreatedAt)
+		}
+	case attribute == entity.SortByName && direction == entity.Asc:
+		return func(fi, fj *entity.Folder) bool {
+			return fi.Name < fj.Name
+		}
+	case attribute == entity.SortByName && direction == entity.Desc:
+		return func(fi, fj *entity.Folder) bool {
+			return fi.Name > fj.Name
+		}
+	default:
+		return func(fi, fj *entity.Folder) bool {
+			return fi.Name < fj.Name
+		}
+	}
 }

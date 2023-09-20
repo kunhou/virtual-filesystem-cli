@@ -10,4 +10,5 @@ type IRepository interface {
 
 	CreateFolder(username string, folder entity.Folder) error
 	DeleteFolder(username, folderName string) error
+	ListFolders(username string, opt entity.ListFolderOption) ([]*entity.Folder, error)
 }

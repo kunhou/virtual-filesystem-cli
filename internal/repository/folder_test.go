@@ -2,6 +2,7 @@ package repository
 
 import (
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 
@@ -111,4 +112,69 @@ func TestDeleteFolder(t *testing.T) {
 	// Scenario 3: Delete a folder from a user that does not exist
 	err = repo.DeleteFolder("nonexistentuser", folder1.Name)
 	assert.Equal(t, errors.ResourceNotFound("nonexistentuser"), err)
+}
+
+func TestListFolders(t *testing.T) {
+	// Create a new in-memory repository
+	repo := NewRepository()
+
+	// Setup test user and folders
+	user := entity.User{Username: "testuser"}
+	folder1 := entity.Folder{Name: "testfolder1", CreatedAt: time.Now().Add(-1 * time.Hour)}
+	folder2 := entity.Folder{Name: "testfolder2", CreatedAt: time.Now()}
+	folder3 := entity.Folder{Name: "testfolder3", CreatedAt: time.Now().Add(-2 * time.Hour)}
+	var err error
+	err = repo.CreateUser(&user)
+	assert.NoError(t, err)
+	err = repo.CreateFolder(user.Username, folder1)
+	assert.NoError(t, err)
+	err = repo.CreateFolder(user.Username, folder2)
+	assert.NoError(t, err)
+	err = repo.CreateFolder(user.Username, folder3)
+	assert.NoError(t, err)
+
+	// Scenario 1: List folders in ascending order by name
+	folders, err := repo.ListFolders(user.Username, entity.ListFolderOption{
+		Sort: entity.FolderSort{
+			Attribute: entity.SortByName,
+			Direction: entity.Asc,
+		},
+	})
+	assert.NoError(t, err)
+	assert.Equal(t, []*entity.Folder{&folder1, &folder2, &folder3}, folders)
+
+	// Scenario 2: List folders in descending order by name
+	folders, err = repo.ListFolders(user.Username, entity.ListFolderOption{
+		Sort: entity.FolderSort{
+			Attribute: entity.SortByName,
+			Direction: entity.Desc,
+		},
+	})
+	assert.NoError(t, err)
+	assert.Equal(t, []*entity.Folder{&folder3, &folder2, &folder1}, folders)
+
+	// Scenario 3: List folders in ascending order by create time
+	folders, err = repo.ListFolders(user.Username, entity.ListFolderOption{
+		Sort: entity.FolderSort{
+			Attribute: entity.SortByCreateTime,
+			Direction: entity.Asc,
+		},
+	})
+	assert.NoError(t, err)
+	assert.Equal(t, []*entity.Folder{&folder3, &folder1, &folder2}, folders)
+
+	// Scenario 4: List folders in descending order by create time
+	folders, err = repo.ListFolders(user.Username, entity.ListFolderOption{
+		Sort: entity.FolderSort{
+			Attribute: entity.SortByCreateTime,
+			Direction: entity.Desc,
+		},
+	})
+	assert.NoError(t, err)
+	assert.Equal(t, []*entity.Folder{&folder2, &folder1, &folder3}, folders)
+
+	// Scenario 5: List folders from a user that does not exist
+	folders, err = repo.ListFolders("nonexistentuser", entity.ListFolderOption{})
+	assert.Equal(t, errors.ResourceNotFound("nonexistentuser"), err)
+	assert.Nil(t, folders)
 }
