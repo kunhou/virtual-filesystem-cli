@@ -22,6 +22,11 @@ func (r *repository) GetUserByName(username string) (*entity.User, error) {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 
+	return r.getUserByName(username)
+}
+
+// GetByUsername fetches a user by their username.
+func (r *repository) getUserByName(username string) (*entity.User, error) {
 	user, exists := r.users[username]
 	if !exists {
 		return nil, errors.ResourceNotFound(username)
