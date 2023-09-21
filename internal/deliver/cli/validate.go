@@ -14,8 +14,7 @@ const (
 )
 
 var (
-	ErrInvalidSortName = fmt.Errorf("Invalid sort option. Use --sort-name or --sort-created.")
-	ErrInvalidSortDir  = fmt.Errorf("Invalid sort direction. Use asc or desc.")
+	ErrInvalidSortParam = fmt.Errorf("Invalid sort option.")
 )
 
 // validateName checks if the username adheres to established guidelines.
@@ -51,7 +50,7 @@ func argsToSortOptions(args []string) (attribute entity.SortAttribute, direction
 		case "--sort-created":
 			attribute = entity.SortByCreateTime
 		default:
-			return attribute, direction, ErrInvalidSortName
+			return attribute, direction, ErrInvalidSortParam
 		}
 	}
 
@@ -62,7 +61,7 @@ func argsToSortOptions(args []string) (attribute entity.SortAttribute, direction
 		case "desc":
 			direction = entity.Desc
 		default:
-			return attribute, direction, ErrInvalidSortDir
+			return attribute, direction, ErrInvalidSortParam
 		}
 	}
 

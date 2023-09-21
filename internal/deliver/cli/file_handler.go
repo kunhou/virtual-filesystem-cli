@@ -58,8 +58,9 @@ func (s *CLIServer) DeleteFileHandler(args []string) {
 }
 
 func (s *CLIServer) ListFilesHandler(args []string) {
+	cmd := "Usage: list-files [username] [foldername] [--sort-name|--sort-created] [asc|desc]"
 	if len(args) < 2 {
-		log.Error("Usage: list-files [username] [foldername] [--sort-name|--sort-created] [asc|desc]")
+		log.Error(cmd)
 		return
 	}
 
@@ -68,7 +69,7 @@ func (s *CLIServer) ListFilesHandler(args []string) {
 
 	attribute, direction, err := argsToSortOptions(args[2:])
 	if err != nil {
-		log.Error(err.Error())
+		log.Error(cmd)
 		return
 	}
 

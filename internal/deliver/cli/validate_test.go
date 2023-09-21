@@ -60,8 +60,8 @@ func TestArgsToSortOptions(t *testing.T) {
 		{[]string{"--sort-created"}, entity.SortByCreateTime, entity.Asc, nil},
 		{[]string{"--sort-name", "asc"}, entity.SortByName, entity.Asc, nil},
 		{[]string{"--sort-name", "desc"}, entity.SortByName, entity.Desc, nil},
-		{[]string{"--sort-invalid"}, entity.SortByName, entity.Asc, ErrInvalidSortName},
-		{[]string{"--sort-name", "invalid"}, entity.SortByName, entity.Asc, ErrInvalidSortDir},
+		{[]string{"--sort-invalid"}, entity.SortByName, entity.Asc, ErrInvalidSortParam},
+		{[]string{"--sort-name", "invalid"}, entity.SortByName, entity.Asc, ErrInvalidSortParam},
 	}
 
 	for _, tt := range tests {

@@ -56,7 +56,7 @@ func (s *CLIServer) Run() {
 		if handler, exists := s.handlers[args[0]]; exists {
 			handler(args[1:])
 		} else {
-			log.Error("Unknown command %s", args[0])
+			log.Error("Unrecognized command")
 		}
 	}
 }
