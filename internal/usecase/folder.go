@@ -25,3 +25,8 @@ func (u *Usecase) CreateFolder(opt entity.CreateFolderParam) error {
 func (u *Usecase) DeleteFolder(username, folderName string) error {
 	return u.repo.DeleteFolder(username, folderName)
 }
+
+// ListFolders lists all folders.
+func (u *Usecase) ListFolders(username string, opt entity.ListFolderOption) ([]*entity.Folder, error) {
+	return u.repo.ListFolders(username, opt)
+}

@@ -59,6 +59,28 @@ func (suite *folderTestSuite) TestDeleteFolder() {
 	suite.NoError(err)
 }
 
+func (suite *folderTestSuite) TestListFolders() {
+	username := "test"
+	folderName := "testFolder"
+	description := "testDescription"
+
+	suite.mockRepo.EXPECT().ListFolders(username, entity.ListFolderOption{}).Return([]*entity.Folder{
+		{
+			Name:        folderName,
+			Description: description,
+		},
+	}, nil)
+
+	folders, err := suite.usecase.ListFolders(username, entity.ListFolderOption{})
+	suite.NoError(err)
+	suite.Equal([]*entity.Folder{
+		{
+			Name:        folderName,
+			Description: description,
+		},
+	}, folders)
+}
+
 // folderMatcher is a custom matcher for comparing Folder entities
 type folderMatcher struct {
 	expected *entity.Folder
