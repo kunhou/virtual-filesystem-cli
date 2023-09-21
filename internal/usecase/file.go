@@ -18,3 +18,7 @@ func (u *Usecase) CreateFile(opt entity.CreateFileParam) error {
 	file := newFile(opt.Name, opt.Description)
 	return u.repo.CreateFile(opt.Username, opt.FolderName, file)
 }
+
+func (u *Usecase) DeleteFile(username, folderName, fileName string) error {
+	return u.repo.DeleteFile(username, folderName, fileName)
+}

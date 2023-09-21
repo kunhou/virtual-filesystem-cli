@@ -52,6 +52,17 @@ func (suite *fileTestSuite) TestCreateFile() {
 	suite.NoError(err)
 }
 
+func (suite *fileTestSuite) TestDeleteFile() {
+	username := "test"
+	folderName := "testfolder"
+	fileName := "testfile"
+
+	suite.mockRepo.EXPECT().DeleteFile(username, folderName, fileName).Return(nil)
+
+	err := suite.usecase.DeleteFile(username, folderName, fileName)
+	suite.NoError(err)
+}
+
 // fileMatcher is a custom matcher for comparing file entities
 type fileMatcher struct {
 	expected *entity.File
