@@ -7,7 +7,7 @@ type Folder struct {
 	Description string
 	CreatedAt   time.Time
 
-	Files []File
+	Files []*File
 }
 
 type ListFolderOption struct {
