@@ -22,3 +22,7 @@ func (u *Usecase) CreateFile(opt entity.CreateFileParam) error {
 func (u *Usecase) DeleteFile(username, folderName, fileName string) error {
 	return u.repo.DeleteFile(username, folderName, fileName)
 }
+
+func (u *Usecase) ListFiles(username, folderName string, opt entity.ListFileOption) ([]*entity.File, error) {
+	return u.repo.ListFiles(username, folderName, opt)
+}

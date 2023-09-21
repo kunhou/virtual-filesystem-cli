@@ -63,6 +63,29 @@ func (suite *fileTestSuite) TestDeleteFile() {
 	suite.NoError(err)
 }
 
+func (suite *fileTestSuite) TestListFiles() {
+	username := "test"
+	folderName := "testfolder"
+	fileName := "testfile"
+	description := "testDescription"
+
+	suite.mockRepo.EXPECT().ListFiles(username, folderName, entity.ListFileOption{}).Return([]*entity.File{
+		{
+			Name:        fileName,
+			Description: description,
+		},
+	}, nil)
+
+	files, err := suite.usecase.ListFiles(username, folderName, entity.ListFileOption{})
+	suite.NoError(err)
+	suite.Equal([]*entity.File{
+		{
+			Name:        fileName,
+			Description: description,
+		},
+	}, files)
+}
+
 // fileMatcher is a custom matcher for comparing file entities
 type fileMatcher struct {
 	expected *entity.File
