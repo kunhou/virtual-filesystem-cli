@@ -35,3 +35,21 @@ func (s *CLIServer) CreateFolderHandler(args []string) {
 
 	log.Info("Create %s successfully.", folderName)
 }
+
+func (s *CLIServer) DeleteFolderHandler(args []string) {
+	if len(args) != 2 {
+		log.Error("Usage: delete-folder [username] [foldername]")
+		return
+	}
+
+	username := args[0]
+	folderName := args[1]
+
+	err := s.usecase.DeleteFolder(username, folderName)
+	if err != nil {
+		log.Error(err.Error())
+		return
+	}
+
+	log.Info("Delete %s successfully.", folderName)
+}
