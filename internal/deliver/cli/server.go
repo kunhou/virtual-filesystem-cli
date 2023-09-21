@@ -28,6 +28,7 @@ func NewCLIServer(u *usecase.Usecase) *CLIServer {
 	srv.registerHandler("create-folder", srv.CreateFolderHandler)
 	srv.registerHandler("delete-folder", srv.DeleteFolderHandler)
 	srv.registerHandler("list-folders", srv.ListFoldersHandler)
+	srv.registerHandler("rename-folder", srv.RenameFolderHandler)
 
 	return &srv
 }

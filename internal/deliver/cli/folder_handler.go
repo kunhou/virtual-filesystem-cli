@@ -88,3 +88,22 @@ func (s *CLIServer) ListFoldersHandler(args []string) {
 		log.Info("%s\t%s\t%s\t%s", folder.Name, folder.Description, folder.CreatedAt.Format("2006-01-02 15:04:05"), username)
 	}
 }
+
+func (s *CLIServer) RenameFolderHandler(args []string) {
+	if len(args) != 3 {
+		log.Error("Usage: rename-folder [username] [foldername] [new-folder-name]")
+		return
+	}
+
+	username := args[0]
+	oldFolderName := args[1]
+	newFolderName := args[2]
+
+	err := s.usecase.RenameFolder(username, oldFolderName, newFolderName)
+	if err != nil {
+		log.Error("Error: %v", err)
+		return
+	}
+
+	log.Info("Rename %s to %s successfully.", oldFolderName, newFolderName)
+}
