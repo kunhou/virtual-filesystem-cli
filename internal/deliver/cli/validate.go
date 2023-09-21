@@ -26,7 +26,7 @@ func validateName(name string) bool {
 	}
 
 	// Check if it contains any invalid characters.
-	matched, _ := regexp.MatchString("^[a-zA-Z0-9_-]+$", name)
+	matched, _ := regexp.MatchString("^[a-zA-Z0-9_\\- ]+$", name)
 
 	return matched
 }

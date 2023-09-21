@@ -16,9 +16,10 @@ func TestValidateName(t *testing.T) {
 	}{
 		{"validName", true},
 		{"", false},
-		{"excessivelylongnameexceedingtwentycharacters", false},
+		{"excessivel yongnamess", false},
 		{"name-with_special!char", false},
 		{"another-valid_name", true},
+		{"12 45lder-name", true},
 	}
 
 	for _, tt := range tests {

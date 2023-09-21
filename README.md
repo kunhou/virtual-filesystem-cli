@@ -114,9 +114,10 @@ A simple command-line interface (CLI) to interact with a virtual file system. Th
 
 ### Input Validation and Restrictions
 
-- `[username]`, `[foldername]`, `[filename]`, and `[new-folder-name]` should not contain whitespace characters and should have a maximum length of 20 characters.
-- Valid characters for `[username]`, `[foldername]`, `[filename]`, and `[new-folder-name]` are alphanumeric characters (`A-Z`, `a-z`, `0-9`) and underscores (`_`).
-- `[description]` have a maximum length of 255 characters.
+- `[username]`, `[foldername]`, `[filename]`, and `[new-folder-name]` can contain whitespace characters if they are enclosed in double quotes. For example, `"New Folder"`. They should have a maximum length of 20 characters.
+- Valid characters for `[username]`, `[foldername]`, `[filename]`, and `[new-folder-name]` are alphanumeric characters (`A-Z`, `a-z`, `0-9`), underscores (`_`), and spaces (enclosed in double quotes).
+- `[description]` can have a maximum length of 255 characters.
+
 
 ## Contributing
 
