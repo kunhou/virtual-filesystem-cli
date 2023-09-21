@@ -30,3 +30,8 @@ func (u *Usecase) DeleteFolder(username, folderName string) error {
 func (u *Usecase) ListFolders(username string, opt entity.ListFolderOption) ([]*entity.Folder, error) {
 	return u.repo.ListFolders(username, opt)
 }
+
+// RenameFolder renames a folder.
+func (u *Usecase) RenameFolder(username, oldName, newName string) error {
+	return u.repo.RenameFolder(username, oldName, newName)
+}

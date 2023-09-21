@@ -81,6 +81,17 @@ func (suite *folderTestSuite) TestListFolders() {
 	}, folders)
 }
 
+func (suite *folderTestSuite) TestRenameFolder() {
+	username := "test"
+	oldName := "testFolder"
+	newName := "newTestFolder"
+
+	suite.mockRepo.EXPECT().RenameFolder(username, oldName, newName).Return(nil)
+
+	err := suite.usecase.RenameFolder(username, oldName, newName)
+	suite.NoError(err)
+}
+
 // folderMatcher is a custom matcher for comparing Folder entities
 type folderMatcher struct {
 	expected *entity.Folder
