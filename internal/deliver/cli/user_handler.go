@@ -1,8 +1,6 @@
 package cli
 
 import (
-	"regexp"
-
 	"github/kunhou/virtual-filesystem-cli/pkg/log"
 )
 
@@ -14,7 +12,7 @@ func (s *CLIServer) RegisterUserHandler(args []string) {
 
 	username := args[0]
 
-	if !validateUsername(username) {
+	if !validateName(username) {
 		log.Error("The %s contain invalid chars.", username)
 		return
 	}
@@ -26,17 +24,4 @@ func (s *CLIServer) RegisterUserHandler(args []string) {
 	}
 
 	log.Info("Add %s successfully.", username)
-}
-
-// validateUsername checks if the username adheres to established guidelines.
-func validateUsername(username string) bool {
-	// Check if the length is between 3 and 20 characters.
-	if len(username) < 3 || len(username) > 20 {
-		return false
-	}
-
-	// Check if it contains any invalid characters.
-	matched, _ := regexp.MatchString("^[a-zA-Z0-9_-]+$", username)
-
-	return matched
 }
