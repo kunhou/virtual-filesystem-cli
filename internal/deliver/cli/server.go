@@ -25,6 +25,7 @@ func NewCLIServer(u *usecase.Usecase) *CLIServer {
 	}
 
 	srv.registerHandler("register", srv.RegisterUserHandler)
+	srv.registerHandler("create-folder", srv.CreateFolderHandler)
 
 	return &srv
 }
