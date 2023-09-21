@@ -18,3 +18,9 @@ type SortOption struct {
 	Attribute SortAttribute
 	Direction SortDirection
 }
+
+type CreateFolderParam struct {
+	Username    string
+	Name        string
+	Description string
+}

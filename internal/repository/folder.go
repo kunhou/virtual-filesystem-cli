@@ -8,7 +8,7 @@ import (
 )
 
 // CreateFolder adds a new folder to a user.
-func (r *repository) CreateFolder(username string, folder entity.Folder) error {
+func (r *repository) CreateFolder(username string, folder *entity.Folder) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
@@ -24,7 +24,7 @@ func (r *repository) CreateFolder(username string, folder entity.Folder) error {
 		}
 	}
 
-	user.Folders = append(user.Folders, &folder)
+	user.Folders = append(user.Folders, folder)
 
 	// Sort folders by name after adding a new one.
 	sort.Slice(user.Folders, func(i, j int) bool {

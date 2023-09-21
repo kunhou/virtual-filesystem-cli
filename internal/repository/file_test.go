@@ -30,7 +30,7 @@ func TestCreateFile(t *testing.T) {
 
 	err = repo.CreateUser(&user)
 	assert.NoError(t, err)
-	err = repo.CreateFolder(user.Username, folder1)
+	err = repo.CreateFolder(user.Username, &folder1)
 	assert.NoError(t, err)
 
 	// Scenario 2: Add file to non-existent folder
@@ -79,7 +79,7 @@ func TestDeleteFile(t *testing.T) {
 	err = repo.DeleteFile(user.Username, folder1.Name, file1.Name)
 	assert.Equal(t, errors.ResourceNotFound("testfolder1"), err)
 
-	err = repo.CreateFolder(user.Username, folder1)
+	err = repo.CreateFolder(user.Username, &folder1)
 	assert.NoError(t, err)
 
 	// Scenario 3: Delete file that does not exist
@@ -113,7 +113,7 @@ func TestListFiles(t *testing.T) {
 	file3 := entity.File{Name: "testfile3", CreatedAt: time.Now().Add(-2 * time.Hour)}
 	err = repo.CreateUser(&user)
 	assert.NoError(t, err)
-	err = repo.CreateFolder(user.Username, folder1)
+	err = repo.CreateFolder(user.Username, &folder1)
 	assert.NoError(t, err)
 
 	// Scenario 1: List files from non-existent testuser

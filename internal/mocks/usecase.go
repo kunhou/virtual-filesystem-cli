@@ -49,7 +49,7 @@ func (mr *MockIRepositoryMockRecorder) CreateFile(username, folderName, file int
 }
 
 // CreateFolder mocks base method.
-func (m *MockIRepository) CreateFolder(username string, folder entity.Folder) error {
+func (m *MockIRepository) CreateFolder(username string, folder *entity.Folder) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateFolder", username, folder)
 	ret0, _ := ret[0].(error)

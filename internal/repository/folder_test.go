@@ -19,25 +19,25 @@ func TestCreateFolder(t *testing.T) {
 	folder1 := entity.Folder{Name: "testfolder1"}
 
 	// Scenario 1: Add folder to non-existent testuser
-	err := repo.CreateFolder(user.Username, folder1)
+	err := repo.CreateFolder(user.Username, &folder1)
 	assert.Equal(t, errors.ResourceNotFound("testuser"), err)
 
 	// Scenario 2: Successfully add folder to an existing user
 	err = repo.CreateUser(&user)
 	assert.NoError(t, err)
-	err = repo.CreateFolder(user.Username, folder1)
+	err = repo.CreateFolder(user.Username, &folder1)
 	assert.NoError(t, err)
 	retrievedUser, err := repo.GetUserByName(user.Username)
 	assert.NoError(t, err)
 	assert.Contains(t, retrievedUser.Folders, &folder1)
 
 	// Scenario 3: Add a folder with a duplicate name to a user
-	err = repo.CreateFolder(user.Username, folder1)
+	err = repo.CreateFolder(user.Username, &folder1)
 	assert.Equal(t, errors.ResourceAlreadyExists(folder1.Name), err)
 
 	// Scenario 4: Check if folders are sorted by name
 	folder0 := entity.Folder{Name: "testfolder0"}
-	err = repo.CreateFolder(user.Username, folder0)
+	err = repo.CreateFolder(user.Username, &folder0)
 	assert.NoError(t, err)
 	retrievedUser, err = repo.GetUserByName(user.Username)
 	assert.NoError(t, err)
@@ -56,11 +56,11 @@ func Test_getFolder(t *testing.T) {
 	var err error
 	err = repo.CreateUser(&user)
 	assert.NoError(t, err)
-	err = repo.CreateFolder(user.Username, folder1)
+	err = repo.CreateFolder(user.Username, &folder1)
 	assert.NoError(t, err)
-	err = repo.CreateFolder(user.Username, folder2)
+	err = repo.CreateFolder(user.Username, &folder2)
 	assert.NoError(t, err)
-	err = repo.CreateFolder(user.Username, folder3)
+	err = repo.CreateFolder(user.Username, &folder3)
 	assert.NoError(t, err)
 
 	// Scenario 1: Get a folder that exists
@@ -91,11 +91,11 @@ func TestDeleteFolder(t *testing.T) {
 	var err error
 	err = repo.CreateUser(&user)
 	assert.NoError(t, err)
-	err = repo.CreateFolder(user.Username, folder1)
+	err = repo.CreateFolder(user.Username, &folder1)
 	assert.NoError(t, err)
-	err = repo.CreateFolder(user.Username, folder2)
+	err = repo.CreateFolder(user.Username, &folder2)
 	assert.NoError(t, err)
-	err = repo.CreateFolder(user.Username, folder3)
+	err = repo.CreateFolder(user.Username, &folder3)
 	assert.NoError(t, err)
 
 	// Scenario 1: Delete a folder that exists
@@ -126,11 +126,11 @@ func TestListFolders(t *testing.T) {
 	var err error
 	err = repo.CreateUser(&user)
 	assert.NoError(t, err)
-	err = repo.CreateFolder(user.Username, folder1)
+	err = repo.CreateFolder(user.Username, &folder1)
 	assert.NoError(t, err)
-	err = repo.CreateFolder(user.Username, folder2)
+	err = repo.CreateFolder(user.Username, &folder2)
 	assert.NoError(t, err)
-	err = repo.CreateFolder(user.Username, folder3)
+	err = repo.CreateFolder(user.Username, &folder3)
 	assert.NoError(t, err)
 
 	// Scenario 1: List folders in ascending order by name
