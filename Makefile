@@ -8,3 +8,6 @@ build: generate
 
 generate:
 	@$(GO) mod tidy
+
+run:
+	@$(GO) run $(DIR_SRC)
