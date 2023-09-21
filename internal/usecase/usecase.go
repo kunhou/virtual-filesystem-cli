@@ -14,7 +14,7 @@ type IRepository interface {
 	ListFolders(username string, opt entity.ListFolderOption) ([]*entity.Folder, error)
 	RenameFolder(username, oldName, newName string) error
 
-	CreateFile(username string, folderName string, file entity.File) error
+	CreateFile(username string, folderName string, file *entity.File) error
 	DeleteFile(username, folderName, fileName string) error
 	ListFiles(username, folderName string, opt entity.ListFileOption) ([]*entity.File, error)
 }

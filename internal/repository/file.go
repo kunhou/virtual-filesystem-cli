@@ -7,7 +7,7 @@ import (
 	"github/kunhou/virtual-filesystem-cli/pkg/errors"
 )
 
-func (r *repository) CreateFile(username string, folderName string, file entity.File) error {
+func (r *repository) CreateFile(username string, folderName string, file *entity.File) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
@@ -22,7 +22,7 @@ func (r *repository) CreateFile(username string, folderName string, file entity.
 		}
 	}
 
-	folder.Files = append(folder.Files, &file)
+	folder.Files = append(folder.Files, file)
 
 	// Sort folders by name after adding a new one.
 	sort.Slice(folder.Files, func(i, j int) bool {

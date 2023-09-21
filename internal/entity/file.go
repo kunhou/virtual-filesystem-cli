@@ -11,3 +11,11 @@ type File struct {
 type ListFileOption struct {
 	Sort SortOption
 }
+
+type CreateFileParam struct {
+	Username   string
+	FolderName string
+
+	Name        string
+	Description string
+}

@@ -35,7 +35,7 @@ func (m *MockIRepository) EXPECT() *MockIRepositoryMockRecorder {
 }
 
 // CreateFile mocks base method.
-func (m *MockIRepository) CreateFile(username, folderName string, file entity.File) error {
+func (m *MockIRepository) CreateFile(username, folderName string, file *entity.File) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateFile", username, folderName, file)
 	ret0, _ := ret[0].(error)

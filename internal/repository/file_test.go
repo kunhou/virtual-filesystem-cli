@@ -25,7 +25,7 @@ func TestCreateFile(t *testing.T) {
 	file3 := entity.File{Name: "testfile3", CreatedAt: time.Now()}
 
 	// Scenario 1: Add file to non-existent testuser
-	err = repo.CreateFile(user.Username, folder1.Name, file1)
+	err = repo.CreateFile(user.Username, folder1.Name, &file1)
 	assert.Equal(t, errors.ResourceNotFound("testuser"), err)
 
 	err = repo.CreateUser(&user)
@@ -34,24 +34,24 @@ func TestCreateFile(t *testing.T) {
 	assert.NoError(t, err)
 
 	// Scenario 2: Add file to non-existent folder
-	err = repo.CreateFile(user.Username, "non-existent-folder", file1)
+	err = repo.CreateFile(user.Username, "non-existent-folder", &file1)
 	assert.Equal(t, errors.ResourceNotFound("non-existent-folder"), err)
 
 	// Scenario 3: Successfully add file to an existing folder
-	err = repo.CreateFile(user.Username, folder1.Name, file1)
+	err = repo.CreateFile(user.Username, folder1.Name, &file1)
 	assert.NoError(t, err)
 	retrievedFolder, err := repo.getFolder(user.Username, folder1.Name)
 	assert.NoError(t, err)
 	assert.Contains(t, retrievedFolder.Files, &file1)
 
 	// Scenario 4: Add a file with a duplicate name to a folder
-	err = repo.CreateFile(user.Username, folder1.Name, file1)
+	err = repo.CreateFile(user.Username, folder1.Name, &file1)
 	assert.Equal(t, errors.ResourceAlreadyExists(file1.Name), err)
 
 	// Scenario 5: Check if files are sorted by name
-	err = repo.CreateFile(user.Username, folder1.Name, file3)
+	err = repo.CreateFile(user.Username, folder1.Name, &file3)
 	assert.NoError(t, err)
-	err = repo.CreateFile(user.Username, folder1.Name, file2)
+	err = repo.CreateFile(user.Username, folder1.Name, &file2)
 	assert.NoError(t, err)
 	assert.Equal(t, []*entity.File{&file1, &file2, &file3}, retrievedFolder.Files)
 }
@@ -87,11 +87,11 @@ func TestDeleteFile(t *testing.T) {
 	assert.Equal(t, errors.ResourceNotFound("testfile1"), err)
 
 	// Scenario 4: Successfully delete file
-	err = repo.CreateFile(user.Username, folder1.Name, file1)
+	err = repo.CreateFile(user.Username, folder1.Name, &file1)
 	assert.NoError(t, err)
-	err = repo.CreateFile(user.Username, folder1.Name, file2)
+	err = repo.CreateFile(user.Username, folder1.Name, &file2)
 	assert.NoError(t, err)
-	err = repo.CreateFile(user.Username, folder1.Name, file3)
+	err = repo.CreateFile(user.Username, folder1.Name, &file3)
 	assert.NoError(t, err)
 	err = repo.DeleteFile(user.Username, folder1.Name, file2.Name)
 	assert.NoError(t, err)
@@ -130,11 +130,11 @@ func TestListFiles(t *testing.T) {
 	assert.Equal(t, []*entity.File{}, files)
 
 	// Scenario 4: List files from a folder with files
-	err = repo.CreateFile(user.Username, folder1.Name, file1)
+	err = repo.CreateFile(user.Username, folder1.Name, &file1)
 	assert.NoError(t, err)
-	err = repo.CreateFile(user.Username, folder1.Name, file2)
+	err = repo.CreateFile(user.Username, folder1.Name, &file2)
 	assert.NoError(t, err)
-	err = repo.CreateFile(user.Username, folder1.Name, file3)
+	err = repo.CreateFile(user.Username, folder1.Name, &file3)
 	assert.NoError(t, err)
 	files, err = repo.ListFiles(user.Username, folder1.Name, entity.ListFileOption{})
 	assert.NoError(t, err)
