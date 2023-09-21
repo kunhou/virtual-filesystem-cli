@@ -99,3 +99,64 @@ func TestDeleteFile(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, []*entity.File{&file1, &file3}, retrievedFolder.Files)
 }
+
+func TestListFiles(t *testing.T) {
+	var err error
+	// Create a new in-memory repository
+	repo := NewRepository()
+
+	// Setup test user, folders and file
+	user := entity.User{Username: "testuser"}
+	folder1 := entity.Folder{Name: "testfolder1", Files: []*entity.File{}}
+	file1 := entity.File{Name: "testfile1", CreatedAt: time.Now().Add(-1 * time.Hour)}
+	file2 := entity.File{Name: "testfile2", CreatedAt: time.Now()}
+	file3 := entity.File{Name: "testfile3", CreatedAt: time.Now().Add(-2 * time.Hour)}
+	err = repo.CreateUser(&user)
+	assert.NoError(t, err)
+	err = repo.CreateFolder(user.Username, folder1)
+	assert.NoError(t, err)
+
+	// Scenario 1: List files from non-existent testuser
+	_, err = repo.ListFiles("non-existent", folder1.Name, entity.ListFileOption{})
+	assert.Equal(t, errors.ResourceNotFound("non-existent"), err)
+
+	// Scenario 2: List files from non-existent folder
+	_, err = repo.ListFiles(user.Username, "non-existent", entity.ListFileOption{})
+	assert.Equal(t, errors.ResourceNotFound("non-existent"), err)
+
+	// Scenario 3: List files from an empty folder
+	files, err := repo.ListFiles(user.Username, folder1.Name, entity.ListFileOption{})
+	assert.NoError(t, err)
+	assert.Equal(t, []*entity.File{}, files)
+
+	// Scenario 4: List files from a folder with files
+	err = repo.CreateFile(user.Username, folder1.Name, file1)
+	assert.NoError(t, err)
+	err = repo.CreateFile(user.Username, folder1.Name, file2)
+	assert.NoError(t, err)
+	err = repo.CreateFile(user.Username, folder1.Name, file3)
+	assert.NoError(t, err)
+	files, err = repo.ListFiles(user.Username, folder1.Name, entity.ListFileOption{})
+	assert.NoError(t, err)
+	assert.Equal(t, []*entity.File{&file1, &file2, &file3}, files)
+
+	// Scenario 5: List files from a folder with files sorted by name
+	files, err = repo.ListFiles(user.Username, folder1.Name, entity.ListFileOption{
+		Sort: entity.SortOption{
+			Attribute: entity.SortByName,
+			Direction: entity.Desc,
+		},
+	})
+	assert.NoError(t, err)
+	assert.Equal(t, []*entity.File{&file3, &file2, &file1}, files)
+
+	// Scenario 6: List files from a folder with files sorted by create time
+	files, err = repo.ListFiles(user.Username, folder1.Name, entity.ListFileOption{
+		Sort: entity.SortOption{
+			Attribute: entity.SortByCreateTime,
+			Direction: entity.Asc,
+		},
+	})
+	assert.NoError(t, err)
+	assert.Equal(t, []*entity.File{&file3, &file1, &file2}, files)
+}

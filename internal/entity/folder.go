@@ -11,10 +11,10 @@ type Folder struct {
 }
 
 type ListFolderOption struct {
-	Sort FolderSort
+	Sort SortOption
 }
 
-type FolderSort struct {
+type SortOption struct {
 	Attribute SortAttribute
 	Direction SortDirection
 }

@@ -135,7 +135,7 @@ func TestListFolders(t *testing.T) {
 
 	// Scenario 1: List folders in ascending order by name
 	folders, err := repo.ListFolders(user.Username, entity.ListFolderOption{
-		Sort: entity.FolderSort{
+		Sort: entity.SortOption{
 			Attribute: entity.SortByName,
 			Direction: entity.Asc,
 		},
@@ -145,7 +145,7 @@ func TestListFolders(t *testing.T) {
 
 	// Scenario 2: List folders in descending order by name
 	folders, err = repo.ListFolders(user.Username, entity.ListFolderOption{
-		Sort: entity.FolderSort{
+		Sort: entity.SortOption{
 			Attribute: entity.SortByName,
 			Direction: entity.Desc,
 		},
@@ -155,7 +155,7 @@ func TestListFolders(t *testing.T) {
 
 	// Scenario 3: List folders in ascending order by create time
 	folders, err = repo.ListFolders(user.Username, entity.ListFolderOption{
-		Sort: entity.FolderSort{
+		Sort: entity.SortOption{
 			Attribute: entity.SortByCreateTime,
 			Direction: entity.Asc,
 		},
@@ -165,7 +165,7 @@ func TestListFolders(t *testing.T) {
 
 	// Scenario 4: List folders in descending order by create time
 	folders, err = repo.ListFolders(user.Username, entity.ListFolderOption{
-		Sort: entity.FolderSort{
+		Sort: entity.SortOption{
 			Attribute: entity.SortByCreateTime,
 			Direction: entity.Desc,
 		},

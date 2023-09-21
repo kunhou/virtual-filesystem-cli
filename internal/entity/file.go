@@ -7,3 +7,7 @@ type File struct {
 	Description string
 	CreatedAt   time.Time
 }
+
+type ListFileOption struct {
+	Sort SortOption
+}

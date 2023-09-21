@@ -68,7 +68,7 @@ func (r *repository) ListFolders(username string, opt entity.ListFolderOption) (
 
 	folders := user.Folders
 	sort.Slice(folders, func(i, j int) bool {
-		return sortByAttribute(opt.Sort.Attribute, opt.Sort.Direction)(folders[i], folders[j])
+		return sortFoldersByAttribute(opt.Sort.Attribute, opt.Sort.Direction)(folders[i], folders[j])
 	})
 
 	return folders, nil
@@ -89,7 +89,7 @@ func (r *repository) getFolder(username, folderName string) (*entity.Folder, err
 	return nil, errors.ResourceNotFound(folderName)
 }
 
-func sortByAttribute(attribute entity.SortAttribute, direction entity.SortDirection) func(fi, fj *entity.Folder) bool {
+func sortFoldersByAttribute(attribute entity.SortAttribute, direction entity.SortDirection) func(fi, fj *entity.Folder) bool {
 	switch {
 	case attribute == entity.SortByCreateTime && direction == entity.Asc:
 		return func(fi, fj *entity.Folder) bool {
