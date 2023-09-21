@@ -31,3 +31,22 @@ func (r *repository) CreateFile(username string, folderName string, file entity.
 
 	return nil
 }
+
+func (r *repository) DeleteFile(username, folderName, fileName string) error {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
+	folder, err := r.getFolder(username, folderName)
+	if err != nil {
+		return err
+	}
+
+	for i, f := range folder.Files {
+		if f.Name == fileName {
+			folder.Files = append(folder.Files[:i], folder.Files[i+1:]...)
+			return nil
+		}
+	}
+
+	return errors.ResourceNotFound(fileName)
+}

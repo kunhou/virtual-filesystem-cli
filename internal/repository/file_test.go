@@ -40,9 +40,9 @@ func TestCreateFile(t *testing.T) {
 	// Scenario 3: Successfully add file to an existing folder
 	err = repo.CreateFile(user.Username, folder1.Name, file1)
 	assert.NoError(t, err)
-	retrievedUser, err := repo.GetUserByName(user.Username)
+	retrievedFolder, err := repo.getFolder(user.Username, folder1.Name)
 	assert.NoError(t, err)
-	assert.Contains(t, retrievedUser.Folders[0].Files, &file1)
+	assert.Contains(t, retrievedFolder.Files, &file1)
 
 	// Scenario 4: Add a file with a duplicate name to a folder
 	err = repo.CreateFile(user.Username, folder1.Name, file1)
@@ -53,7 +53,49 @@ func TestCreateFile(t *testing.T) {
 	assert.NoError(t, err)
 	err = repo.CreateFile(user.Username, folder1.Name, file2)
 	assert.NoError(t, err)
-	retrievedUser, err = repo.GetUserByName(user.Username)
+	assert.Equal(t, []*entity.File{&file1, &file2, &file3}, retrievedFolder.Files)
+}
+
+func TestDeleteFile(t *testing.T) {
+	var err error
+	// Create a new in-memory repository
+	repo := NewRepository()
+
+	// Setup test user, folders and file
+	user := entity.User{Username: "testuser"}
+	folder1 := entity.Folder{Name: "testfolder1"}
+	file1 := entity.File{Name: "testfile1", CreatedAt: time.Now()}
+	file2 := entity.File{Name: "testfile2", CreatedAt: time.Now()}
+	file3 := entity.File{Name: "testfile3", CreatedAt: time.Now()}
+
+	// Scenario 1: Delete file from non-existent testuser
+	err = repo.DeleteFile(user.Username, folder1.Name, file1.Name)
+	assert.Equal(t, errors.ResourceNotFound("testuser"), err)
+
+	err = repo.CreateUser(&user)
 	assert.NoError(t, err)
-	assert.Equal(t, []*entity.File{&file1, &file2, &file3}, retrievedUser.Folders[0].Files)
+
+	// Scenario 2: Delete file from non-existent folder
+	err = repo.DeleteFile(user.Username, folder1.Name, file1.Name)
+	assert.Equal(t, errors.ResourceNotFound("testfolder1"), err)
+
+	err = repo.CreateFolder(user.Username, folder1)
+	assert.NoError(t, err)
+
+	// Scenario 3: Delete file that does not exist
+	err = repo.DeleteFile(user.Username, folder1.Name, file1.Name)
+	assert.Equal(t, errors.ResourceNotFound("testfile1"), err)
+
+	// Scenario 4: Successfully delete file
+	err = repo.CreateFile(user.Username, folder1.Name, file1)
+	assert.NoError(t, err)
+	err = repo.CreateFile(user.Username, folder1.Name, file2)
+	assert.NoError(t, err)
+	err = repo.CreateFile(user.Username, folder1.Name, file3)
+	assert.NoError(t, err)
+	err = repo.DeleteFile(user.Username, folder1.Name, file2.Name)
+	assert.NoError(t, err)
+	retrievedFolder, err := repo.getFolder(user.Username, folder1.Name)
+	assert.NoError(t, err)
+	assert.Equal(t, []*entity.File{&file1, &file3}, retrievedFolder.Files)
 }
