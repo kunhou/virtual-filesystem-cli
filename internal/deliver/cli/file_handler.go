@@ -18,6 +18,10 @@ func (s *CLIServer) CreateFileHandler(args []string) {
 	var description string
 	if len(args) > 3 {
 		description = args[3]
+		if !validDescription(description) {
+			log.Error("The description is invalid.")
+			return
+		}
 	}
 
 	err := s.usecase.CreateFile(entity.CreateFileParam{

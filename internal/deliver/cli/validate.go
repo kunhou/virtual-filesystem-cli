@@ -8,6 +8,11 @@ import (
 	"github/kunhou/virtual-filesystem-cli/internal/entity"
 )
 
+const (
+	MaxNameLength        = 20
+	MaxDescriptionLength = 255
+)
+
 var (
 	ErrInvalidSortName = fmt.Errorf("Invalid sort option. Use --sort-name or --sort-created.")
 	ErrInvalidSortDir  = fmt.Errorf("Invalid sort direction. Use asc or desc.")
@@ -15,8 +20,8 @@ var (
 
 // validateName checks if the username adheres to established guidelines.
 func validateName(name string) bool {
-	// Check if the length is between 3 and 20 characters.
-	if len(name) == 0 || len(name) > 20 {
+	// Check if the length is between 1 and 20 characters.
+	if len(name) == 0 || len(name) > MaxNameLength {
 		return false
 	}
 
@@ -24,6 +29,15 @@ func validateName(name string) bool {
 	matched, _ := regexp.MatchString("^[a-zA-Z0-9_-]+$", name)
 
 	return matched
+}
+
+func validDescription(description string) bool {
+	// Check if the length is between 1 and 255 characters.
+	if len(description) == 0 || len(description) > MaxDescriptionLength {
+		return false
+	}
+
+	return true
 }
 
 func argsToSortOptions(args []string) (attribute entity.SortAttribute, direction entity.SortDirection, err error) {

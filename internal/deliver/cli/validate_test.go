@@ -28,6 +28,25 @@ func TestValidateName(t *testing.T) {
 	}
 }
 
+func TestValidDescription(t *testing.T) {
+	tests := []struct {
+		description string
+		expected    bool
+	}{
+		{"This is a valid description.", true},
+		{"", false}, // Empty string
+		{"a", true}, // Smallest non-empty string
+		{strings.Repeat("a", MaxDescriptionLength), true},
+		{strings.Repeat("a", MaxDescriptionLength+1), false},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.description, func(t *testing.T) {
+			assert.Equal(t, tt.expected, validDescription(tt.description))
+		})
+	}
+}
+
 func TestArgsToSortOptions(t *testing.T) {
 	tests := []struct {
 		args              []string

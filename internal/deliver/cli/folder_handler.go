@@ -16,6 +16,10 @@ func (s *CLIServer) CreateFolderHandler(args []string) {
 	var description string
 	if len(args) > 2 {
 		description = args[2]
+		if !validDescription(description) {
+			log.Error("The description is invalid.")
+			return
+		}
 	}
 
 	if !validateName(folderName) {
