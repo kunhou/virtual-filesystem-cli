@@ -148,3 +148,17 @@ func (mr *MockIRepositoryMockRecorder) ListFolders(username, opt interface{}) *g
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListFolders", reflect.TypeOf((*MockIRepository)(nil).ListFolders), username, opt)
 }
+
+// RenameFolder mocks base method.
+func (m *MockIRepository) RenameFolder(username, oldName, newName string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RenameFolder", username, oldName, newName)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// RenameFolder indicates an expected call of RenameFolder.
+func (mr *MockIRepositoryMockRecorder) RenameFolder(username, oldName, newName interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RenameFolder", reflect.TypeOf((*MockIRepository)(nil).RenameFolder), username, oldName, newName)
+}

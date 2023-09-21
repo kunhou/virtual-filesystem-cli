@@ -178,3 +178,49 @@ func TestListFolders(t *testing.T) {
 	assert.Equal(t, errors.ResourceNotFound("nonexistentuser"), err)
 	assert.Nil(t, folders)
 }
+
+func TestRenameFolder(t *testing.T) {
+	// Create a new in-memory repository
+	repo := NewRepository()
+
+	// Setup test user and folders
+	user := entity.User{Username: "testuser"}
+	folder1 := entity.Folder{Name: "testfolder1", CreatedAt: time.Now().Add(-1 * time.Hour)}
+	folder2 := entity.Folder{Name: "testfolder2", CreatedAt: time.Now()}
+	folder3 := entity.Folder{Name: "testfolder3", CreatedAt: time.Now().Add(-2 * time.Hour)}
+	var err error
+	err = repo.CreateUser(&user)
+	assert.NoError(t, err)
+	err = repo.CreateFolder(user.Username, &folder1)
+	assert.NoError(t, err)
+	err = repo.CreateFolder(user.Username, &folder2)
+	assert.NoError(t, err)
+	err = repo.CreateFolder(user.Username, &folder3)
+	assert.NoError(t, err)
+
+	// Scenario 1: Rename a folder that exists
+	err = repo.RenameFolder(user.Username, folder2.Name, "newfoldername")
+	assert.NoError(t, err)
+	folder, err := repo.getFolder(user.Username, "newfoldername")
+	assert.NoError(t, err)
+	assert.Equal(t, "newfoldername", folder.Name)
+
+	// Scenario 2: Rename a folder that does not exist
+	err = repo.RenameFolder(user.Username, "nonexistentfolder", "newfoldername2")
+	assert.Equal(t, errors.ResourceNotFound("nonexistentfolder"), err)
+
+	// Scenario 3: Rename a folder from a user that does not exist
+	err = repo.RenameFolder("nonexistentuser", folder1.Name, "newfoldername")
+	assert.Equal(t, errors.ResourceNotFound("nonexistentuser"), err)
+
+	// Scenario 4: Rename a folder to a name that already exists
+	err = repo.RenameFolder(user.Username, folder1.Name, folder2.Name)
+	assert.Equal(t, errors.ResourceAlreadyExists(folder2.Name), err)
+
+	// Scenario 5: Rename a folder to the same name
+	err = repo.RenameFolder(user.Username, folder1.Name, folder1.Name)
+	assert.NoError(t, err)
+	folder, err = repo.getFolder(user.Username, folder1.Name)
+	assert.NoError(t, err)
+	assert.Equal(t, folder1.Name, folder.Name)
+}

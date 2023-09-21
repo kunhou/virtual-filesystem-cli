@@ -74,6 +74,37 @@ func (r *repository) ListFolders(username string, opt entity.ListFolderOption) (
 	return folders, nil
 }
 
+func (r *repository) RenameFolder(username, oldName, newName string) error {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+
+	user, err := r.getUserByName(username)
+	if err != nil {
+		return err
+	}
+
+	var folderToRename *entity.Folder
+
+	// Check if the folder with old name exists and if new name already exists.
+	for _, f := range user.Folders {
+		if f.Name == oldName {
+			folderToRename = f
+			continue
+		}
+		if f.Name == newName {
+			return errors.ResourceAlreadyExists(newName)
+		}
+	}
+
+	if folderToRename == nil {
+		return errors.ResourceNotFound(oldName)
+	}
+
+	folderToRename.Name = newName
+
+	return nil
+}
+
 func (r *repository) getFolder(username, folderName string) (*entity.Folder, error) {
 	// Check if the user exists.
 	user, err := r.getUserByName(username)
