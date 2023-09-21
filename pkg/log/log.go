@@ -7,7 +7,7 @@ import (
 
 // Info logs a message to stdout.
 func Info(format string, a ...interface{}) {
-	fmt.Fprintf(os.Stdout, "INFO: "+format+"\n", a...)
+	fmt.Fprintf(os.Stdout, format+"\n", a...)
 }
 
 // Warn logs a warning message to stdout.
