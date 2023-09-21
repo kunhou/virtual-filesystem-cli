@@ -33,3 +33,22 @@ func (s *CLIServer) CreateFileHandler(args []string) {
 
 	log.Info("Create %s in %s / %s successfully.", fileName, username, folderName)
 }
+
+func (s *CLIServer) DeleteFileHandler(args []string) {
+	if len(args) != 3 {
+		log.Error("Usage: delete-file [username] [foldername] [filename]")
+		return
+	}
+
+	username := args[0]
+	folderName := args[1]
+	fileName := args[2]
+
+	err := s.usecase.DeleteFile(username, folderName, fileName)
+	if err != nil {
+		log.Error(err.Error())
+		return
+	}
+
+	log.Info("Delete %s in %s / %s successfully.", fileName, username, folderName)
+}
