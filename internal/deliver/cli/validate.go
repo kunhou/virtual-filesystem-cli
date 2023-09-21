@@ -30,8 +30,8 @@ func argsToSortOptions(args []string) (attribute entity.SortAttribute, direction
 	attribute = entity.SortByName
 	direction = entity.Asc
 
-	if len(args) > 1 {
-		switch args[1] {
+	if len(args) > 0 {
+		switch args[0] {
 		case "--sort-name":
 			attribute = entity.SortByName
 		case "--sort-created":
@@ -41,8 +41,8 @@ func argsToSortOptions(args []string) (attribute entity.SortAttribute, direction
 		}
 	}
 
-	if len(args) > 2 {
-		switch strings.ToLower(args[2]) {
+	if len(args) > 1 {
+		switch strings.ToLower(args[1]) {
 		case "asc":
 			direction = entity.Asc
 		case "desc":

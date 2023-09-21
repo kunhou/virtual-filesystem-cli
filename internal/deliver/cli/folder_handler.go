@@ -62,7 +62,7 @@ func (s *CLIServer) ListFoldersHandler(args []string) {
 
 	username := args[0]
 
-	attribute, direction, err := argsToSortOptions(args)
+	attribute, direction, err := argsToSortOptions(args[1:])
 	if err != nil {
 		log.Error(err.Error())
 		return
@@ -85,7 +85,7 @@ func (s *CLIServer) ListFoldersHandler(args []string) {
 	}
 
 	for _, folder := range folders {
-		log.Info("%s\t%s\t%s\t%s", folder.Name, folder.Description, folder.CreatedAt.Format("2006-01-02 15:04:05"), username)
+		log.Info("%s\t%s\t%s\t%s", folder.Name, folder.Description, folder.CreatedAt.Format(entity.ListResourceTimeFormat), username)
 	}
 }
 

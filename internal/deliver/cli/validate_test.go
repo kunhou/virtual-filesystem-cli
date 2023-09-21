@@ -36,12 +36,12 @@ func TestArgsToSortOptions(t *testing.T) {
 		expectedErr       error
 	}{
 		{[]string{}, entity.SortByName, entity.Asc, nil},
-		{[]string{"", "--sort-name"}, entity.SortByName, entity.Asc, nil},
-		{[]string{"", "--sort-created"}, entity.SortByCreateTime, entity.Asc, nil},
-		{[]string{"", "--sort-name", "asc"}, entity.SortByName, entity.Asc, nil},
-		{[]string{"", "--sort-name", "desc"}, entity.SortByName, entity.Desc, nil},
-		{[]string{"", "--sort-invalid"}, entity.SortByName, entity.Asc, ErrInvalidSortName},
-		{[]string{"", "--sort-name", "invalid"}, entity.SortByName, entity.Asc, ErrInvalidSortDir},
+		{[]string{"--sort-name"}, entity.SortByName, entity.Asc, nil},
+		{[]string{"--sort-created"}, entity.SortByCreateTime, entity.Asc, nil},
+		{[]string{"--sort-name", "asc"}, entity.SortByName, entity.Asc, nil},
+		{[]string{"--sort-name", "desc"}, entity.SortByName, entity.Desc, nil},
+		{[]string{"--sort-invalid"}, entity.SortByName, entity.Asc, ErrInvalidSortName},
+		{[]string{"--sort-name", "invalid"}, entity.SortByName, entity.Asc, ErrInvalidSortDir},
 	}
 
 	for _, tt := range tests {
