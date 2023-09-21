@@ -1,6 +1,17 @@
 package cli
 
-import "regexp"
+import (
+	"fmt"
+	"regexp"
+	"strings"
+
+	"github/kunhou/virtual-filesystem-cli/internal/entity"
+)
+
+var (
+	ErrInvalidSortName = fmt.Errorf("Invalid sort option. Use --sort-name or --sort-created.")
+	ErrInvalidSortDir  = fmt.Errorf("Invalid sort direction. Use asc or desc.")
+)
 
 // validateName checks if the username adheres to established guidelines.
 func validateName(name string) bool {
@@ -13,4 +24,33 @@ func validateName(name string) bool {
 	matched, _ := regexp.MatchString("^[a-zA-Z0-9_-]+$", name)
 
 	return matched
+}
+
+func argsToSortOptions(args []string) (attribute entity.SortAttribute, direction entity.SortDirection, err error) {
+	attribute = entity.SortByName
+	direction = entity.Asc
+
+	if len(args) > 1 {
+		switch args[1] {
+		case "--sort-name":
+			attribute = entity.SortByName
+		case "--sort-created":
+			attribute = entity.SortByCreateTime
+		default:
+			return attribute, direction, ErrInvalidSortName
+		}
+	}
+
+	if len(args) > 2 {
+		switch strings.ToLower(args[2]) {
+		case "asc":
+			direction = entity.Asc
+		case "desc":
+			direction = entity.Desc
+		default:
+			return attribute, direction, ErrInvalidSortDir
+		}
+	}
+
+	return attribute, direction, nil
 }

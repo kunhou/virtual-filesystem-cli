@@ -53,3 +53,38 @@ func (s *CLIServer) DeleteFolderHandler(args []string) {
 
 	log.Info("Delete %s successfully.", folderName)
 }
+
+func (s *CLIServer) ListFoldersHandler(args []string) {
+	if len(args) < 1 {
+		log.Error("Usage: list-folders [username] [--sort-name|--sort-created] [asc|desc]")
+		return
+	}
+
+	username := args[0]
+
+	attribute, direction, err := argsToSortOptions(args)
+	if err != nil {
+		log.Error(err.Error())
+		return
+	}
+
+	folders, err := s.usecase.ListFolders(username, entity.ListFolderOption{
+		Sort: entity.SortOption{
+			Attribute: attribute,
+			Direction: direction,
+		},
+	})
+	if err != nil {
+		log.Error(err.Error())
+		return
+	}
+
+	if len(folders) == 0 {
+		log.Warn("The %s doesn't have any folders.", username)
+		return
+	}
+
+	for _, folder := range folders {
+		log.Info("%s\t%s\t%s\t%s", folder.Name, folder.Description, folder.CreatedAt.Format("2006-01-02 15:04:05"), username)
+	}
+}
